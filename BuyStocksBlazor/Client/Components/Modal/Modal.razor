@@ -1,0 +1,142 @@
+﻿@using BuyStocksBlazor.Client.Extensions
+@inject IJSRuntime JSRuntime;
+
+@if (Show)
+{
+   
+
+
+    <div class="container body-content modal fade show" style="display: block;z-index: 1050;top: 50%;left: 50%;margin-right: -50%;transform: translate(-50%, -50%);overflow:hidden" aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+            <div class="modal-content" style="max-height:calc(100vh - 5rem)"
+    
+>
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+
+                    <h2 class="modal-title">@ModalHeader</h2>
+                    <button type="button" class="btn-close" @onclick="@ModalCancel"></button>
+
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body" style="height: 100vh;overflow-y:auto;">
+
+                    <div id="PrintDiv">
+                        <p>
+                        </p>
+                        @Content
+
+                    </div>
+                    <Confirm @ref="Confirmation" ConfirmationChanged="Confirm_Click">
+                    </Confirm> 
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="submit" disabled style="display: none" aria-hidden="true"></button>
+                    @Buttons
+                    @if (ShowPrint)
+                    {
+                        <button type="button" class="btn btn-primary" @onclick="@Print">Print</button>
+
+                    }
+                    <button type="button" class="btn btn-primary" @onclick="@ModalCancel">Close</button>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop fade show" style="z-index: auto;"></div>
+    
+
+}
+@code
+{
+    Confirm Confirmation { get; set; }
+    private bool _show { get; set; }
+    private bool _isInitialized { get; set; }
+    [Parameter]
+    public string ModalHeader { get; set; }
+    [Parameter]
+    public RenderFragment Content { get; set; }
+    [Parameter]
+    public RenderFragment Buttons { get; set; }
+    [Parameter]
+    public EventCallback<bool> ModalClosed { get; set; }
+    [Parameter]
+    public bool ShowPrint { get; set; } = false;
+    [Parameter]
+    public bool isEdit { get; set; } = false;
+    [Parameter]
+    public bool Show
+    {
+        get { return _show; }
+        set
+        {
+            _show = value;
+            Changed(_show).GetAwaiter();
+            //StateHasChanged();
+
+        }
+    }
+
+    internal async Task Changed(bool e)
+    {
+        //if (!_isInitialized)
+        //{
+        //    return;
+        //}
+        if (e)
+        {
+            await JSRuntime.AddBodyClass("modal-open");
+        }
+        else
+        {
+            await JSRuntime.RemoveBodyClass("modal-open");
+        }
+
+    }
+
+    //void ModalShow()
+    //{
+    //    Show = true;
+    //}
+    async void ModalCancel()
+    {
+        if (isEdit)
+        {
+            Confirmation.Show();
+
+        }
+        else
+        {
+            Show = false;
+            await ModalClosed.InvokeAsync(true);
+        }
+
+
+    }
+    protected async Task Confirm_Click(bool deleteConfirmed)
+    {
+        if (deleteConfirmed)
+        {
+            Show = false;
+            await ModalClosed.InvokeAsync(true);
+        }
+        else
+        {
+            StateHasChanged();
+        }
+    }
+    async void Print()
+    {
+        // Console.WriteLine("Modal ok");
+        await JSRuntime.PrintDiv("PrintDiv");
+        // Show = false;
+        StateHasChanged();
+    }
+}

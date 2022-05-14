@@ -1,0 +1,33 @@
+﻿@typeparam TItem
+@using System.Reflection
+@using System.ComponentModel.DataAnnotations
+
+@code {
+    [CascadingParameter(Name = "Grid")]
+    public DetailsGridView<TItem> Grid { get; set; }
+
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public RenderFragment Value { get; set; }
+
+    public string Description => GetDisplayName(Title);
+
+
+    protected override void OnInitialized()
+    {
+        Grid.AddRow(this);
+    }
+
+    private string GetDisplayName(string propertyname)
+    {
+        MemberInfo myprop = typeof(TItem).GetProperty(propertyname) as MemberInfo;
+        if (myprop == null)
+        {
+            return propertyname;
+        }
+        var dd = myprop.GetCustomAttribute(typeof(DisplayAttribute)) as DisplayAttribute;
+        return dd?.Name ?? propertyname;
+    }
+}

@@ -1,0 +1,63 @@
+﻿@typeparam TItem
+
+@if (Items.PageCount > 1)
+{
+    <ul class="pagination" style="float:right;">
+
+        @if (Items.StartPageIndex > 1)
+        {
+            <li class="page-item">
+                <a @onclick="@(() => PagingChanged.InvokeAsync(1))" aria-label="First" class="page-link">
+                    <span aria-hidden="true">1</span>
+                </a>
+            </li>
+        }
+
+        @if (Items.PageIndex > 1)
+        {
+            <li class="page-item">
+                <a @onclick="@(() => PagingChanged.InvokeAsync(Items.PageIndex - 1))" aria-label="Previous" class="page-link">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+        }
+
+        @for (int i = Items.StartPageIndex; i <= Items.StopPageIndex; i++)
+        {
+            int j = new int();
+            j = int.Parse(i.ToString());
+            <li class="page-item @((Items.PageIndex == i) ? "active" : null)">
+                <a @onclick="@(() => PagingChanged.InvokeAsync(j))" aria-label="@i" class="page-link">
+                    <span aria-hidden="true">@i</span>
+                </a>
+            </li>
+        }
+
+        @if (Items.PageIndex < Items.PageCount)
+        {
+            <li class="page-item">
+                <a @onclick="@(() => PagingChanged.InvokeAsync(Items.PageIndex + 1))" aria-label="Next" class="page-link">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        }
+
+        @if (Items.StopPageIndex < Items.PageCount)
+        {
+            <li class="page-item">
+                <a @onclick="@(() => PagingChanged.InvokeAsync(Items.PageCount))" aria-label="Last" class="page-link">
+                    <span aria-hidden="true">@Items.PageCount</span>
+                </a>
+            </li>
+        }
+
+    </ul>
+}
+
+@code {
+    [Parameter]
+    public PagingList<TItem> Items { get; set; }
+
+    [Parameter]
+    public EventCallback<int> PagingChanged { get; set; }
+}

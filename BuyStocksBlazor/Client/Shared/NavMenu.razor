@@ -1,0 +1,88 @@
+﻿@inject NavigationManager navigationManager
+@inject CustomStateProvider authStateProvider
+
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary navbar-static-top sticky-top">
+    <div class="container-fluid">
+        <a href="#" class="navbar-brand">Stocks Blazor</a>
+        <button class="navbar-toggler" aria-expanded="false" aria-controls="navbarColor02" aria-label="Toggle navigation" type="button" data-bs-target="#navbarColor02" data-bs-toggle="collapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarColor02">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">Home</NavLink>
+               </li>
+                @*<li class="nav-item">
+                    <NavLink class="nav-link" href="About">
+                    <span class="oi oi-info" aria-hidden="true"></span> About
+                    </NavLink>
+                    </li>*@
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/counter">Contact </NavLink>
+                </li>
+
+            </ul>
+            <div class="d-flex justify-content-end">
+                <ul class="nav navbar-nav">
+                    <AuthorizeView>
+                        <Authorized>
+
+                           <ul class="nav navbar-nav navbar-right">
+                            <li class="nav-item">
+                                <button type="button" class="nav-link btn btn-link" @onclick="@LogoutClick">Logout</button>
+
+                            </li>
+                            </ul>
+                        </Authorized>
+                        <NotAuthorized>
+                            <ul class="nav navbar-nav navbar-right">
+                                <li class="nav-item">
+                                    <a class="nav-link btn btn-link" href="/Login">Log in</a>
+                                </li>
+                            </ul>
+                        </NotAuthorized>
+                    </AuthorizeView>
+                 
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</nav>
+@code {
+    [CascadingParameter] Task<AuthenticationState> authenticationStateTask { get; set; }
+    bool collapseNavMenu = false;
+
+
+    string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    string fullName;
+
+    void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+
+    }
+
+    async Task Fullname()
+    {
+        var authState = await authenticationStateTask;
+        var user = authState.User;
+
+        //if (user.Identity.IsAuthenticated)
+        //{
+        //    var usr = await UserManager.GetUserAsync(user);
+        //    fullName = usr.FullName;
+        //}
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        //await Fullname();
+    }
+       async Task LogoutClick()
+    {
+        await authStateProvider.Logout();
+        navigationManager.NavigateTo("/");
+    }
+}

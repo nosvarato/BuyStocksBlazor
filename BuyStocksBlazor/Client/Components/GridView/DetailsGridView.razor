@@ -1,0 +1,53 @@
+﻿@typeparam TItem
+
+
+@if (DetailsText == null)
+{
+    <br />
+    <p></p>
+}
+else
+{
+    <br />
+    @DetailsText
+    <br />
+}
+<table>
+    @foreach (var row in DetailsRows)
+    {
+        <tr>
+            <td>
+                <strong>
+                    @row.Description
+                </strong>
+            </td>
+            <td>&nbsp;</td>
+            <td>
+                @row.Value
+            </td>
+        </tr>
+    }
+</table>
+<CascadingValue Value="(DetailsGridView<TItem>)this" Name="Grid">
+    @DetailsGridRows
+</CascadingValue>
+
+
+
+@code {
+    [Parameter]
+    public RenderFragment DetailsGridRows { get; set; }
+
+    [Parameter]
+    public RenderFragment DetailsText { get; set; }
+
+
+    public List<DetailsGridRow<TItem>> DetailsRows { get; } = new List<DetailsGridRow<TItem>>();
+
+    public void AddRow(DetailsGridRow<TItem> row)
+    {
+        row.Grid = this;
+        DetailsRows.Add(row);
+        StateHasChanged();
+    }
+}

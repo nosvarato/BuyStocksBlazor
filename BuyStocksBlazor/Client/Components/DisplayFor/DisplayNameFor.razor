@@ -1,0 +1,28 @@
+﻿@using System.Linq
+@using System.Reflection
+@using System.ComponentModel.DataAnnotations
+@typeparam TItem
+
+<label class="@Class">@Description</label>
+
+@code {
+
+    [Parameter]
+    public string Title { get; set; }
+    [Parameter]
+    public string Class { get; set; }
+
+    private string Description => GetDisplayName(Title);
+
+    private string GetDisplayName(string propertyname)
+    {
+        MemberInfo myprop = typeof(TItem).GetProperty(propertyname) as MemberInfo;
+        if (myprop == null)
+        {
+            return propertyname;
+        }
+        var dd = myprop.GetCustomAttribute(typeof(DisplayAttribute)) as DisplayAttribute;
+        return dd?.Name ?? propertyname;
+    }
+
+}

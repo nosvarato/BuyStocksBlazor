@@ -1,0 +1,39 @@
+﻿@typeparam TItem
+@if (Items == null || Items.Count == 0)
+{
+    HeaderColumns.Clear();
+}
+else
+{
+    @if (!string.IsNullOrEmpty(TitleHeader))
+    {
+        <br />
+        <h3>@TitleHeader</h3>
+    }
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                @foreach (SimpleGridViewHearderColumn<TItem> column in HeaderColumns)
+                {
+
+                    <th>
+                        @column.Description
+                    </th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Items)
+            {
+                <tr>
+                    @GridRow(item)
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+    <CascadingValue Value="(SimpleGridView<TItem>)this" Name="Grid">
+        @GridHeaderColumns
+    </CascadingValue>
+}

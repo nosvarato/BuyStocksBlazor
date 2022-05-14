@@ -1,0 +1,130 @@
+﻿@typeparam TItem
+@if (Items == null)
+{
+
+}
+else
+{
+    if (!DisableSearchHeader)
+    {
+
+
+        <div class="container-fluid p-0">
+            <div class="row  no-gutters ">
+                <div class="col-md-8">
+                    @if (!DisableSchoolHeader)
+                    {
+
+                        
+                    }
+                </div>
+
+                <div class="col-md-4 offset-md-0">
+                    <div class="input-group">
+                        @if (ShowCustomSearch)
+                        {
+                            @CustomSearch
+                        }
+                        <input name="filter" class="form-control" placeholder="filter"
+                       @bind-value="@_filter" @onkeyup="@Enter" type="search" aria-describedby="button-search" />
+                        <div class="input-group-append" id="button-search">
+                            <lable class="btn btn-primary" @onclick="SearchClicked">
+                                <span class="fas fa-search" aria-hidden="true"></span> Search
+                            </lable>
+                        </div>
+                        <div class="input-group-append" id="button-search">
+                            <lable class="btn btn-primary" @onclick="ExportClicked">
+                                <span class="fas fa-file-export" aria-hidden="true"></span> Export
+                            </lable>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="container-fluid p-0">
+            <div class="row justify-content-md-between no-gutters ">
+                <div class="col col-lg-8 input-group mb-3">
+                    @HeaderButtonsAlways
+                    @if (_selectedSchool != 0)
+                    {
+
+                        @HeaderButtons
+                    }
+                </div>
+                <div class="col-md-auto">
+                </div>
+                <div class="col col-lg-4">
+
+
+                    <Pager Items="Items" PagingChanged="PagingChanged"></Pager>
+
+                </div>
+            </div>
+
+        </div>
+    }
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                @foreach (GridHeaderColumn<TItem> column in HeaderColumns)
+                {
+
+                    <th>
+                        @if (column.Sortable)
+                        {
+                            @if (Items.SortExpression == column.Title || "-" + Items.SortExpression == column.Title || Items.SortExpression == "-" + column.Title)
+                            {
+                                <div @onclick="(() => SortingChanged((Items.SortExpression.StartsWith('-') ? column.Title : '-'+column.Title )))">
+                                    <a href="" class="" @onclick:preventDefault>
+                                        @column.Description
+                                    </a>
+                                    @((MarkupString)(Items.SortExpression.StartsWith("-") ? PagingOptions.Current.HtmlIndicatorUp : PagingOptions.Current.HtmlIndicatorDown))
+
+
+                                </div>
+                            }
+                            else
+                            {
+                                <div @onclick="(() => SortingChanged(column.Title))">
+                                    <a href="" @onclick:preventDefault>
+                                        @column.Description
+                                    </a>
+                                </div>
+                            }
+                        }
+                        else
+
+                        {
+                            if (column.TemplateColumn)
+                            {
+                                @column.TitleTemplate
+                            }
+                            else
+                            {
+                                @column.Description
+                            }
+                        }
+                    </th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Items)
+            {
+                <tr>
+                    @GridRow(item)
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <Pager Items="Items" PagingChanged="PagingChanged"></Pager>
+    <CascadingValue Value="(GridView<TItem>)this" Name="Grid">
+        @GridHeaderColumns
+    </CascadingValue>
+}
+
