@@ -25,5 +25,4 @@ The api is using SwachBuckle for documentation and testing.
 There is a live version of the app running at
 https://buystocksblazor.azurewebsites.net/
 
-and although not best practice in production the API is also available at 
-https://buystocksblazor.azurewebsites.net/swagger
+
