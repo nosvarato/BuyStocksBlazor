@@ -9,7 +9,7 @@ namespace Paging
 {
     public static class PagingList
     {
-
+      
         /// <summary>
         /// Create a paging list based on the EntityFramework ordered query 
         /// </summary>

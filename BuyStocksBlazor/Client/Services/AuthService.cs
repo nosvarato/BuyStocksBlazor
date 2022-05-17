@@ -14,7 +14,7 @@ namespace BuyStocksBlazor.Client.Services
 
         public async Task<CurrentUser> CurrentUserInfo()
         {
-            var result = await _httpClient.GetFromJsonAsync<CurrentUser>("api/auth/currentuserinfo");
+            var result = await _httpClient.GetFromJsonAsync<CurrentUser>("api/User/currentuserinfo");
             return result;
         }
 

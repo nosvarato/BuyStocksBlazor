@@ -1,9 +1,26 @@
 ﻿@page "/"
+@inject CustomStateProvider svcauth
+<PageTitle>Home</PageTitle>
+<div>
+<img src="Stock.png" style="width:100%"/>
+</div>
+<AuthorizeView>
+    <Authorized>
+        <h3>Welcome @current.UserName</h3>
+        <br/>
+        <h4>Your current account balance is : @current.CurrentBalance.ToString("C")</h4>
+    </Authorized>
+    <NotAuthorized>
+       <center> <h3>Click here to  <a href="/Login">Log in</a></h3></center>
+    </NotAuthorized>
+</AuthorizeView>
+@code
+{
+    CurrentUser current;
 
-<PageTitle>Index</PageTitle>
-
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?" />
+    protected override Task OnInitializedAsync()
+    {
+        current = svcauth.LoggedInUser;
+        return base.OnInitializedAsync();
+    }
+}

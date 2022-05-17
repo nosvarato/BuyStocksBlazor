@@ -1,0 +1,54 @@
+﻿<Modal Show="ShowModal" ModalHeader="@ModalHeader" ModalClosed="ModalClosed"  ShowPrint="true">
+    <Content>
+       
+        <DetailsGridView TItem="StockPurchase" >
+             <DetailsText>
+                <p>Thank you for you purchase. Details are below</p>
+         </DetailsText>
+            <DetailsGridRows>
+                <DetailsGridRow TItem="StockPurchase" Title="@nameof(StockPurchase.Purchased)">
+                    <Value>
+                        @(String.Format("{0:f}", Item.Purchased))
+                    </Value>
+                </DetailsGridRow>
+                <DetailsGridRow TItem="StockPurchase" Title="@nameof(Stock.Symbol)">
+                    <Value>
+                        @Item.StockPurchased.Symbol
+                    </Value>
+                </DetailsGridRow>
+                <DetailsGridRow TItem="StockPurchase" Title="@nameof(Stock.CompanyName)">
+                    <Value>
+                        @Item.StockPurchased.CompanyName
+                    </Value>
+                </DetailsGridRow>
+                 <DetailsGridRow TItem="StockPurchase" Title="@nameof(StockPurchase.AmountPurchased)">
+                    <Value>
+                        @Item.AmountPurchased
+                    </Value>
+                </DetailsGridRow>
+                 <DetailsGridRow TItem="StockPurchase" Title="Total">
+                    <Value>
+                        @((Item.AmountPurchased * Item.PricePerStock).ToString("C"))
+                    </Value>
+                </DetailsGridRow>
+            </DetailsGridRows>
+        </DetailsGridView>
+    </Content>
+    <Buttons>
+        
+    </Buttons>
+</Modal>
+@code
+{
+    [Parameter]
+    public StockPurchase Item { get; set; }
+
+    [Parameter]
+    public bool ShowModal { get; set; }
+    [Parameter]
+    public EventCallback<bool> ModalClosed { get; set; }
+    [Parameter]
+    public string ModalHeader { get; set; }
+
+    
+}

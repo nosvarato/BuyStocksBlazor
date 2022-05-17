@@ -1,0 +1,53 @@
+﻿@page "/buy"
+@inject StocksService svcStock
+<PageTitle>Buy Stocks</PageTitle>
+@attribute [Authorize]
+
+<h3>Index</h3>
+
+
+<GridView TItem="Stock" Items="svcStock.Model" SearchChanged="SearchChangedHandler" ExportChanged="ExportHandler">
+    
+    <GridHeaderColumns>
+        <GridHeaderColumn TItem="Stock" Title="@nameof(Stock.Symbol)" Sortable="true"></GridHeaderColumn>
+        <GridHeaderColumn TItem="Stock" Title="@nameof(Stock.CompanyName)" Sortable="true"></GridHeaderColumn>
+        <GridHeaderColumn TItem="Stock" Title="@nameof(Stock.CurrentPrice)"  ></GridHeaderColumn>
+        <GridHeaderColumn TItem="Stock" Title="Action"></GridHeaderColumn>
+    </GridHeaderColumns>
+    <GridRow>
+        <td>@context.Symbol</td>
+        <td>@context.CompanyName</td>
+        <td>@context.CurrentPrice.ToString("C")</td>
+        <td> <a href="" @onclick:preventDefault @onclick="@(() => svcStock.ShowModalEdit(context))">Buy This</a></td>
+
+    </GridRow>
+</GridView>
+
+<Details ModalHeader="@svcStock.ModalHeader" ShowModal="svcStock.ShowDetails" Item="svcStock.DetailsCurrent" ModalClosed="svcStock.CloseModalDetails"></Details>
+<Edit ModalHeader="@svcStock.ModalHeader" ShowModal="svcStock.ShowEdit" item="svcStock.Current" ModalClosed="svcStock.CloseModalEdit" ValidSubmit="svcStock.EditSave"> </Edit>
+
+
+@code {
+
+
+    protected override async Task OnInitializedAsync()
+    {
+
+       
+        await svcStock.Get("");
+
+    }
+
+
+    async Task SearchChangedHandler(SearchValues searchValues)
+    {
+       await svcStock.Get(searchValues.Filter, searchValues.Page, searchValues.SortExpression);
+        
+    }
+
+    protected async void ExportHandler(SearchValues searchValues)
+    {
+        await svcStock.Export(searchValues.Filter);
+    }
+
+}

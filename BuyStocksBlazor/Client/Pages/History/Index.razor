@@ -1,0 +1,54 @@
+﻿@page "/history"
+@inject HistoryService svcStock
+<PageTitle>Buy Stocks</PageTitle>
+@attribute [Authorize]
+
+<h3>Index</h3>
+
+
+<GridView TItem="StockPurchase" Items="svcStock.Model" SearchChanged="SearchChangedHandler" ExportChanged="ExportHandler">
+    
+    <GridHeaderColumns>
+        <GridHeaderColumn TItem="StockPurchase" Title="@nameof(StockPurchase.Purchased)" Sortable="true"></GridHeaderColumn>
+        <GridHeaderColumn TItem="StockPurchase" Title="@nameof(Stock.Symbol)" ></GridHeaderColumn>
+        <GridHeaderColumn TItem="StockPurchase" Title="@nameof(Stock.CompanyName)" ></GridHeaderColumn>
+        <GridHeaderColumn TItem="StockPurchase" Title="@nameof(StockPurchase.AmountPurchased)"  ></GridHeaderColumn>
+        <GridHeaderColumn TItem="StockPurchase" Title="Total"  ></GridHeaderColumn>
+        <GridHeaderColumn TItem="StockPurchase" Title="Action"></GridHeaderColumn>
+    </GridHeaderColumns>
+    <GridRow>
+        <td>@(String.Format("{0:g}", context.Purchased))</td>
+        <td>@context.StockPurchased.Symbol</td>
+        <td>@context.StockPurchased.CompanyName</td>
+        <td>@context.AmountPurchased.ToString()</td>
+        <td>@((context.AmountPurchased * context.PricePerStock).ToString("C"))</td>
+        <td><a href="" @onclick:preventDefault @onclick="@(() => svcStock.ShowModalDetail(context))">Details</a></td>
+
+    </GridRow>
+</GridView>
+
+<BuyStocksBlazor.Client.Pages.BuyStocks.Details ModalHeader="@svcStock.ModalHeader" ShowModal="svcStock.ShowDetails" Item="svcStock.DetailsCurrent" ModalClosed="svcStock.CloseModalDetails"></BuyStocksBlazor.Client.Pages.BuyStocks.Details>
+
+@code {
+
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        await svcStock.Get("");
+
+    }
+
+
+    async Task SearchChangedHandler(SearchValues searchValues)
+    {
+       await svcStock.Get(searchValues.Filter, searchValues.Page, searchValues.SortExpression);
+        
+    }
+
+    protected async void ExportHandler(SearchValues searchValues)
+    {
+        await svcStock.Export(searchValues.Filter);
+    }
+
+}

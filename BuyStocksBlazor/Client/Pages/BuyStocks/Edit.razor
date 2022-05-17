@@ -1,0 +1,83 @@
+﻿@if (ShowModal)
+{
+    <EditForm Model="@item" OnValidSubmit="OnValidSubmit">
+        <Modal Show="ShowModal" ModalHeader="@ModalHeader" ModalClosed="ModalClosed" isEdit="true">
+            <Content>
+                <p>Buying @item.CurrentStock.Symbol - @item.CurrentStock.CompanyName at @item.CurrentStock.CurrentPrice.ToString("C")</p>
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div class="form-group">
+                    <DisplayNameFor TItem="EditStock" Title="@nameof(EditStock.Amount)" Class="control-label" />
+                    <div>
+                        <InputNumber class="form-control" @bind-Value="item.Amount" />
+                        <ValidationMessage For="@(() => item.Amount)" />
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <DisplayNameFor TItem="EditStock" Title="@nameof(EditStock.Total)" Class="control-label" />
+                    <div>
+                       @item.Total.ToString("C")
+                       <ValidationMessage For="@(() => item.Total)" />
+                    </div>
+
+                </div>
+                 
+                  <div class="form-group">
+                    <DisplayNameFor TItem="EditStock" Title="@nameof(EditStock.CurrentBalance)" Class="control-label" />
+                    <div>
+                       @item.CurrentBalance.ToString("C")
+                       <ValidationMessage For="@(() => item.CurrentBalance)" />
+                    </div>
+
+                </div>
+                  <Confirm @ref="BuyConfirmation" ConfirmationChanged="Confirm_Click"  ConfirmationMessage="@ValidMessage" ConfirmationTitle="Confirm Purchase" ConfirmButtonText="Proceed">
+                      
+                    </Confirm> 
+            </Content>
+            <Buttons>
+                <button class="btn btn-primary" type="submit">Buy</button>
+            </Buttons>
+        </Modal>
+    </EditForm>
+}
+
+@code {
+    @code
+    {
+        [Parameter]
+        public EditStock item { get; set; }
+
+        [Parameter]
+        public bool ShowModal { get; set; }
+        [Parameter]
+        public EventCallback<bool> ModalClosed { get; set; }
+        [Parameter]
+        public EventCallback<EditStock> ValidSubmit { get; set; }
+        Confirm BuyConfirmation { get; set; }
+        string ValidMessage { get; set; }
+        async Task OnValidSubmit()
+        {
+            ValidMessage = $"Your order for {item.CurrentStock.Symbol.ToString()} with Total : {item.Total.ToString("C")} is valid would you like to Proceed?";
+             BuyConfirmation.Show();
+            
+        }
+         protected async Task Confirm_Click(bool buyConfirmed)
+    {
+        if (buyConfirmed)
+        {
+            await ValidSubmit.InvokeAsync(item);
+            
+        }
+        else
+        {
+            //await ModalClosed.InvokeAsync(true);
+            StateHasChanged();
+        }
+    }
+        [Parameter]
+        public string ModalHeader { get; set; }
+
+    }
+
+}

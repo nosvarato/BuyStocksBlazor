@@ -6,6 +6,7 @@ namespace BuyStocksBlazor.Client.Services
 {
     public class CustomStateProvider : AuthenticationStateProvider
     {
+        public CurrentUser LoggedInUser { get; set; }
         private readonly IAuthService api;
         private CurrentUser? _currentUser;
         public CustomStateProvider(IAuthService api)
@@ -32,10 +33,18 @@ namespace BuyStocksBlazor.Client.Services
             return new AuthenticationState(new ClaimsPrincipal(identity));
         }
 
-        private async Task<CurrentUser> GetCurrentUser()
+        public async Task<CurrentUser> GetCurrentUser()
         {
             if (_currentUser != null && _currentUser.IsAuthenticated) return _currentUser;
             _currentUser = await api.CurrentUserInfo();
+            LoggedInUser = _currentUser;
+            return _currentUser;
+        }
+        public async Task<CurrentUser> GetCurrentUser(bool force)
+        {
+            if (_currentUser != null && _currentUser.IsAuthenticated && !force) return _currentUser;
+            _currentUser = await api.CurrentUserInfo();
+            LoggedInUser = _currentUser;
             return _currentUser;
         }
         public async Task Logout()

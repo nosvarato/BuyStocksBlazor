@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32505.173
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuyStocksBlazor.Server", "BuyStocksBlazor\Server\BuyStocksBlazor.Server.csproj", "{AF8BB295-200C-44A4-B1F9-7492F2F015F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuyStocksBlazor.Server", "BuyStocksBlazor\Server\BuyStocksBlazor.Server.csproj", "{AF8BB295-200C-44A4-B1F9-7492F2F015F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuyStocksBlazor.Client", "BuyStocksBlazor\Client\BuyStocksBlazor.Client.csproj", "{23492C71-4C2C-4225-B22A-EB9F6AF8EB50}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuyStocksBlazor.Client", "BuyStocksBlazor\Client\BuyStocksBlazor.Client.csproj", "{23492C71-4C2C-4225-B22A-EB9F6AF8EB50}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuyStocksBlazor.Shared", "BuyStocksBlazor\Shared\BuyStocksBlazor.Shared.csproj", "{95CD02FB-96DE-4DA9-B4A0-53B49F4DFF09}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuyStocksBlazor.Shared", "BuyStocksBlazor\Shared\BuyStocksBlazor.Shared.csproj", "{95CD02FB-96DE-4DA9-B4A0-53B49F4DFF09}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paging", "BuyStocksBlazor\Paging\Paging.csproj", "{244E8414-C332-45EF-9778-E2F5AE50AD4A}"
 EndProject

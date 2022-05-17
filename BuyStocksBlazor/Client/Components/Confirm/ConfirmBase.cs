@@ -16,6 +16,9 @@ namespace BuyStocksBlazor.Client.Components.Confirm
         [Parameter]
         public string ConfirmationMessage { get; set; } = "There might be unsaved data. Are you sure you want to close?";
 
+        [Parameter]
+        public string ConfirmButtonText { get; set; } = "Close";
+
         public void Show()
         {
             ShowConfirmation = true;

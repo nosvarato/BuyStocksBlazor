@@ -15,21 +15,18 @@ namespace BuyStocksBlazor.Client.Extensions
         public const string XlsxContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
         public const TableStyles Style = TableStyles.Light11;
 
-        public static ValueTask<bool> Confirm(this IJSRuntime jsRuntime, string message)
-        {
-            return jsRuntime.InvokeAsync<bool>("confirm", message);
-        }
+     
         public static ValueTask<bool> AddBodyClass(this IJSRuntime jsRuntime, string Classname)
         {
-            return jsRuntime.InvokeAsync<bool>("SaphariNet.addBodyClass", Classname);
+            return jsRuntime.InvokeAsync<bool>("BlazorStock.addBodyClass", Classname);
         }
         public static ValueTask<bool> RemoveBodyClass(this IJSRuntime jsRuntime, string Classname)
         {
-            return jsRuntime.InvokeAsync<bool>("SaphariNet.removeBodyClass", Classname);
+            return jsRuntime.InvokeAsync<bool>("BlazorStock.removeBodyClass", Classname);
         }
         public static ValueTask<string> PrintDiv(this IJSRuntime jsRuntime, string PrintDiv)
         {
-            return jsRuntime.InvokeAsync<string>("SaphariNet.printDiv", PrintDiv);
+            return jsRuntime.InvokeAsync<string>("BlazorStock.printDiv", PrintDiv);
         }
         public static ValueTask<bool> ExportExcel<T>(this IJSRuntime jsRuntime, List<T> data, string reportname)
         {
@@ -53,6 +50,7 @@ namespace BuyStocksBlazor.Client.Extensions
                 }
                 table.Rows.Add(values);
             }
+            ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
             using var package = new ExcelPackage();
             var worksheet = package.Workbook.Worksheets.Add(reportname.Replace(".xlsx",""));
             worksheet.Cells["A1"].LoadFromDataTable(table, PrintHeaders: true, Style);
@@ -62,8 +60,8 @@ namespace BuyStocksBlazor.Client.Extensions
             }
             var now = DateTime.Now;
             var reportnamedatetime = reportname.Insert(reportname.LastIndexOf(".xlsx"), String.Format("_{0}{1}{2}_{3}{4}{5}", now.Year,now.Month,now.Day,now.Hour,now.Minute,now.Second));
-            return jsRuntime.InvokeAsync<bool>("SaphariNet.saveAsFile", reportnamedatetime, package.GetAsByteArray());
-            // return File(package.GetAsByteArray(), XlsxContentType, "Schools Report.xlsx");
+            return jsRuntime.InvokeAsync<bool>("BlazorStock.saveAsFile", reportnamedatetime, package.GetAsByteArray());
+            
 
 
         }
